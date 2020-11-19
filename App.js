@@ -4,16 +4,17 @@ import { Alert, View, Text } from "react-native";
 import * as Location from "expo-location";
 import axios from "axios";
 import { APIkey } from "./apikey";
+import Weather from "./Weather";
 
 export default class extends React.Component {
   state = {
     isLoading: true,
   };
   getWeather = async (latitude, longitude) => {
-    const data = await axios.get(
+    const { data } = await axios.get(
       `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${APIkey}&units=metric`
     );
-    console.log(data);
+    this.setState({ isLoading: false, temp: data.main.temp });
   };
   getLocation = async () => {
     try {
@@ -22,7 +23,6 @@ export default class extends React.Component {
         coords: { latitude, longitude },
       } = await Location.getCurrentPositionAsync();
       this.getWeather(latitude, longitude);
-      this.setState({ isLoading: false });
     } catch (error) {
       Alert.alert("Can't find ypu");
     }
@@ -32,11 +32,11 @@ export default class extends React.Component {
   }
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, temp } = this.state;
     return isLoading ? (
       <Loading />
     ) : (
-      <View style={{ backgroundColor: "blue", flex: 1 }}></View>
+      <Weather temp={Math.round(temp)}></Weather>
     );
   }
 }
