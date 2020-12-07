@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, StatusBar } from "react-native";
 import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { Location } from "./Location";
 
 const weatherIcons = {
   Thunderstorm: {
@@ -67,7 +68,7 @@ const weatherIcons = {
   },
 };
 
-export default function Weather({ temp, condition }) {
+export default function Weather({ temp, condition, lat, long }) {
   return (
     <LinearGradient
       colors={weatherIcons[condition].color}
@@ -81,6 +82,7 @@ export default function Weather({ temp, condition }) {
           color="white"
         />
         <Text style={styles.celsious}>{temp}℃</Text>
+        <Location lat={lat} long={long}></Location>
       </View>
       <View style={styles.halfContainer}>
         <Text style={styles.title}>{condition}</Text>
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: "white",
   },
+
   textContainer: {
     paddingHorizontal: 20,
   },
