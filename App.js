@@ -1,6 +1,6 @@
 import React from "react";
 import Loading from "./Loading";
-import { Alert, View, Text } from "react-native";
+import { Alert, View, Text, BackHandler, ToastAndroid } from "react-native";
 import * as Location from "expo-location";
 import axios from "axios";
 import { APIkey } from "./apikey";
@@ -9,6 +9,21 @@ import Weather from "./Weather";
 export default class extends React.Component {
   state = {
     isLoading: true,
+    isExit: false,
+  };
+  backAction = () => {
+    if (!this.state.isExit) {
+      this.setState({ isExit: true });
+      ToastAndroid.show("Back click for exit", 2000);
+    } else if (this.state.isExit) {
+      BackHandler.exitApp();
+    }
+    setTimeout(() => {
+      this.setState({ isExit: false });
+    }, 2000);
+
+    // BackHandler.exitApp()
+    return true;
   };
   getWeather = async (latitude, longitude) => {
     const {
@@ -34,6 +49,13 @@ export default class extends React.Component {
   };
   componentDidMount() {
     this.getLocation();
+    this.backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.backAction
+    );
+  }
+  componentWillUnmount() {
+    this.backHandler.remove();
   }
 
   render() {

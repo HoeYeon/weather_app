@@ -106,7 +106,7 @@ Weather.propTypes = {
     "Squall",
     "Tornado",
     "Clear",
-    "Cloud",
+    "Clouds",
   ]),
 };
 
